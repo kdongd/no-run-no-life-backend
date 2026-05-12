@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>운동 기록 목록</title>
+
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #03060b;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .header {
+        height: 78px;
+        background: rgba(0, 0, 0, 0.82);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 44px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+
+    .logo {
+        font-size: 28px;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: -1px;
+    }
+
+    .nav {
+        display: flex;
+        gap: 64px;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .nav a {
+        padding: 29px 0 21px;
+    }
+
+    .nav a.active {
+        color: #1687ff;
+        border-bottom: 3px solid #1687ff;
+    }
+
+    .hero {
+        height: 720px;
+        padding-top: 78px;
+        background:
+                linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.78)),
+                url("/images/boxing-hero.png");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero-content {
+        padding-top: 86px;
+    }
+
+    .mini-badge {
+        display: inline-block;
+        border: 1px solid #1687ff;
+        color: #1687ff;
+        border-radius: 999px;
+        padding: 10px 24px;
+        font-size: 18px;
+        margin-bottom: 28px;
+        letter-spacing: 0.5px;
+    }
+
+    .hero-title {
+        font-size: 72px;
+        font-weight: 900;
+        line-height: 1.25;
+        letter-spacing: -4px;
+    }
+
+    .blue {
+        color: #087bff;
+    }
+
+    .hero-desc {
+        margin-top: 22px;
+        color: #d7dce5;
+        font-size: 24px;
+        line-height: 1.5;
+    }
+
+    .hero-btn {
+        display: inline-block;
+        margin-top: 28px;
+        width: 320px;
+        padding: 18px 0;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #0672ff, #1687ff);
+        font-size: 20px;
+        font-weight: 800;
+        box-shadow: 0 0 30px rgba(22, 135, 255, 0.45);
+    }
+
+    .hero-btn span {
+        margin-left: 22px;
+    }
+
+    .record-section {
+        width: 90%;
+        max-width: 1420px;
+        margin: -56px auto 60px;
+        padding: 34px 64px 32px;
+        background: rgba(8, 14, 23, 0.97);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+        position: relative;
+        z-index: 10;
+    }
+
+    .record-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .record-left {
+        display: flex;
+        align-items: end;
+        gap: 24px;
+    }
+
+    .record-title {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: -1px;
+    }
+
+    .record-sub {
+        color: #9ba7b8;
+        font-size: 16px;
+        padding-bottom: 4px;
+        font-weight: 400;
+    }
+
+    .all-btn {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+        padding: 12px 22px;
+        color: #e7edf6;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: rgba(255, 255, 255, 0.025);
+    }
+
+    th {
+        padding: 18px 36px;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 400;
+        color: #aeb8c8;
+        letter-spacing: -0.2px;
+    }
+
+    td {
+        padding: 18px 36px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+        font-size: 18px;
+        font-weight: 400;
+        color: #d8dee8;
+        letter-spacing: -0.3px;
+    }
+
+    td:first-child {
+        color: #f1f4f8;
+    }
+
+    .type-box {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: #f1f4f8;
+        font-weight: 500;
+    }
+
+    .icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icon svg {
+        width: 21px;
+        height: 21px;
+        stroke-width: 2.3;
+    }
+
+    .running {
+        background: rgba(0, 123, 255, 0.25);
+        color: #1687ff;
+    }
+
+    .boxing {
+        background: rgba(255, 70, 70, 0.25);
+        color: #ff4d4d;
+    }
+
+    .empty {
+        padding: 80px 0;
+        text-align: center;
+        color: #97a4b5;
+        font-size: 20px;
+        font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">NO RUN NO LIFE</div>
+
+  <nav class="nav">
+    <a href="/workouts" class="active">홈</a>
+    <a href="/workouts/new">운동 기록하기</a>
+    <a href="#">기록 통계</a>
+  </nav>
+</header>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="mini-badge">
+      RUNNING & BOXING LOG
+    </div>
+
+    <h1 class="hero-title">
+      기록이 <br>
+      <span class="blue">나를</span> 만든다
+    </h1>
+
+    <div class="hero-desc">
+      오늘의 운동을 남기고,<br>
+      어제보다 나은 나를 확인하세요.
+    </div>
+
+    <a href="/workouts/new" class="hero-btn">
+      운동 기록 시작하기 <span>→</span>
+    </a>
+
+  </div>
+
+</section>
+
+<section class="record-section">
+
+  <div class="record-top">
+
+    <div class="record-left">
+      <div class="record-title">운동 기록 목록</div>
+      <div class="record-sub">나의 러닝과 복싱 기록을 확인하세요.</div>
+    </div>
+
+    <a href="/workouts" class="all-btn">전체 기록 보기 〉</a>
+
+  </div>
+
+  <div th:if="${#lists.isEmpty(workouts)}" class="empty">
+    아직 등록된 운동 기록이 없습니다.
+  </div>
+
+  <table th:if="${!#lists.isEmpty(workouts)}">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>운동 종류</th>
+      <th>운동 시간</th>
+      <th>메모</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="workout : ${workouts}">
+      <td th:text="${workout.id}">1</td>
+
+      <td>
+        <div class="type-box">
+
+                    <span th:if="${workout.type.name() == 'RUNNING'}" class="icon running">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="13" cy="4" r="2"></circle>
+                            <path d="M6 21l3-5"></path>
+                            <path d="M16 21l-2-6"></path>
+                            <path d="M9 16l4-5"></path>
+                            <path d="M13 11l4 3"></path>
+                            <path d="M12 7l-3 3"></path>
+                            <path d="M9 10l-4 1"></path>
+                        </svg>
+                    </span>
+
+          <span th:if="${workout.type.name() == 'BOXING'}" class="icon boxing">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M8 13V7a4 4 0 0 1 8 0v6"></path>
+                            <path d="M6 13h12v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4v-4z"></path>
+                            <path d="M10 7v5"></path>
+                            <path d="M14 7v5"></path>
+                            <path d="M8 17h8"></path>
+                        </svg>
+                    </span>
+
+          <span th:text="${workout.type.name() == 'RUNNING'} ? '러닝' : '복싱'">러닝</span>
+
+        </div>
+      </td>
+
+      <td>
+        <span th:text="${workout.duration}">30</span>분
+      </td>
+
+      <td th:text="${workout.memo}">오늘 운동 메모</td>
+    </tr>
+    </tbody>
+  </table>
+
+</section>
+
+</body>
+</html>
