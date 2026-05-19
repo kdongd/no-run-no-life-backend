@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -22,4 +23,7 @@ public class Workout {
 
     @NotBlank(message = "메모는 비어있을 수 없습니다.")
     private String memo;
+
+    @NotNull(message = "운동 날짜/시간은 필수입니다.")
+    private LocalDateTime workoutDateTime;
 }
