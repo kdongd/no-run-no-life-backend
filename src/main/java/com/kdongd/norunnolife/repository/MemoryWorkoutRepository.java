@@ -4,18 +4,19 @@ import com.kdongd.norunnolife.domain.Workout;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class MemoryWorkoutRepository {
 
-    private final Map<Long, Workout> store = new HashMap<>();
-    private Long sequence = 0L;
+    private final Map<Long, Workout> store = new ConcurrentHashMap<>();
+    private final AtomicLong sequence = new AtomicLong(0);
 
     public Workout save(Workout workout) {
-        workout.setId(++sequence);
+        workout.assignId(sequence.incrementAndGet());
         store.put(workout.getId(), workout);
         return workout;
     }
