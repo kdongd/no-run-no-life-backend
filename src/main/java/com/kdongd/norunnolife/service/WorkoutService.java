@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +41,11 @@ public class WorkoutService {
                 workout.getMemo(),
                 workout.getWorkoutDateTime()
         );
+    }
+
+    public WorkoutResponse getWorkout(Long id) {
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("운동 기록을 찾을 수 없습니다."));
+        return toResponse(workout);
     }
 }

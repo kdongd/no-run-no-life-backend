@@ -28,4 +28,9 @@ public class WorkoutController {
     public ResponseEntity<WorkoutResponse> createWorkout(@Valid @RequestBody WorkoutRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(workoutService.createWorkout(request));
     }
+
+    @GetMapping("/workouts/{id}")
+    public ResponseEntity<WorkoutResponse> getWorkout(@PathVariable Long id) {
+        return ResponseEntity.ok(workoutService.getWorkout(id));
+    }
 }
