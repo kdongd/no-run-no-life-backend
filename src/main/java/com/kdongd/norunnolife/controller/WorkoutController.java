@@ -1,9 +1,12 @@
 package com.kdongd.norunnolife.controller;
 
-import com.kdongd.norunnolife.domain.Workout;
+import com.kdongd.norunnolife.dto.WorkoutRequest;
+import com.kdongd.norunnolife.dto.WorkoutResponse;
 import com.kdongd.norunnolife.service.WorkoutService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +20,12 @@ public class WorkoutController {
     private final WorkoutService workoutService;
 
     @GetMapping("/workouts")
-    public List<Workout> getWorkouts() {
-        return workoutService.getWorkouts();
+    public ResponseEntity<List<WorkoutResponse>> getWorkouts() {
+        return ResponseEntity.ok(workoutService.getWorkouts());
     }
 
     @PostMapping("/workouts")
-    public Workout createWorkout(@Valid @RequestBody Workout workout) {
-        return workoutService.createWorkout(workout);
+    public ResponseEntity<WorkoutResponse> createWorkout(@Valid @RequestBody WorkoutRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(workoutService.createWorkout(request));
     }
-
 }
