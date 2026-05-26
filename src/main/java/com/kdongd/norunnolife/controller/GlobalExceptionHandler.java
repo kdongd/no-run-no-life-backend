@@ -14,4 +14,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNotFound(NoSuchElementException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
 }
