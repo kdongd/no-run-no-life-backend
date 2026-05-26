@@ -10,7 +10,8 @@ public record WorkoutResponse(
         int durationMinutes,
         String memo,
         LocalDateTime workoutDateTime
-) {
+)
+{
     public static WorkoutResponse from(Workout workout) {
         return new WorkoutResponse(
                 workout.getId(),
