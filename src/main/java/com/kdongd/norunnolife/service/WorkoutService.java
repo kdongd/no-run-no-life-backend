@@ -17,35 +17,24 @@ public class WorkoutService {
     private final MemoryWorkoutRepository workoutRepository;
 
     public WorkoutResponse createWorkout(WorkoutRequest request) {
-        Workout workout = new Workout(
+        Workout workout = Workout.create(
                 request.type(),
                 request.durationMinutes(),
                 request.memo(),
                 request.workoutDateTime()
         );
-        Workout saved = workoutRepository.save(workout);
-        return toResponse(saved);
+        return WorkoutResponse.from(workoutRepository.save(workout));
     }
 
     public List<WorkoutResponse> getWorkouts() {
         return workoutRepository.findAll().stream()
-                .map(this::toResponse)
+                .map(WorkoutResponse::from)
                 .toList();
     }
 
-    private WorkoutResponse toResponse(Workout workout) {
-        return new WorkoutResponse(
-                workout.getId(),
-                workout.getType(),
-                workout.getDurationMinutes(),
-                workout.getMemo(),
-                workout.getWorkoutDateTime()
-        );
-    }
-
     public WorkoutResponse getWorkout(Long id) {
-        Workout workout = workoutRepository.findById(id)
+        return workoutRepository.findById(id)
+                .map(WorkoutResponse::from)
                 .orElseThrow(() -> new NoSuchElementException("운동 기록을 찾을 수 없습니다."));
-        return toResponse(workout);
     }
 }

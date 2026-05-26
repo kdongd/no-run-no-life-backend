@@ -1,30 +1,30 @@
 package com.kdongd.norunnolife.domain;
 
 import lombok.Getter;
-
 import java.time.LocalDateTime;
-
 
 @Getter
 public class Workout {
 
-    private Long id;
-    private WorkoutType type;
-    private int durationMinutes;
-    private String memo;
-    private LocalDateTime workoutDateTime;
+    private final Long id;
+    private final WorkoutType type;
+    private final int durationMinutes;
+    private final String memo;
+    private final LocalDateTime workoutDateTime;
 
-    public Workout(WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+    private Workout(Long id, WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+        this.id = id;
         this.type = type;
         this.durationMinutes = durationMinutes;
         this.memo = memo;
         this.workoutDateTime = workoutDateTime;
     }
 
-    public void assignId(Long id) {
-        if (this.id != null) {
-            throw new IllegalStateException("이미 id가 존재합니다.");
-        }
-        this.id = id;
+    public static Workout create(WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+        return new Workout(null, type, durationMinutes, memo, workoutDateTime);
+    }
+
+    public static Workout withId(Long id, WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+        return new Workout(id, type, durationMinutes, memo, workoutDateTime);
     }
 }
