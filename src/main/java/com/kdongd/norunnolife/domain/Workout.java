@@ -27,4 +27,5 @@ public class Workout {
     public static Workout withId(Long id, WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
         return new Workout(id, type, durationMinutes, memo, workoutDateTime);
     }
+
 }
