@@ -39,10 +39,9 @@ public class WorkoutService {
 
     @Transactional
     public void deleteWorkout(Long id) {
-        if (!workoutRepository.existsById(id)) {
-            throw new NoSuchElementException("운동 기록을 찾을 수 없습니다.");
-        }
-        workoutRepository.deleteById(id);
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("운동 기록을 찾을 수 없습니다."));
+        workoutRepository.delete(workout);
     }
 
     public List<WorkoutResponse> getWorkouts() {
