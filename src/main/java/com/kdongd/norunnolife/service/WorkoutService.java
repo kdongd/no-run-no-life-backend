@@ -3,13 +3,13 @@ package com.kdongd.norunnolife.service;
 import com.kdongd.norunnolife.domain.Workout;
 import com.kdongd.norunnolife.dto.WorkoutRequest;
 import com.kdongd.norunnolife.dto.WorkoutResponse;
+import com.kdongd.norunnolife.exception.WorkoutNotFoundException;
 import com.kdongd.norunnolife.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +35,7 @@ public class WorkoutService {
     @Transactional
     public WorkoutResponse updateWorkout(Long id, WorkoutRequest request) {
         Workout workout = workoutRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("운동 기록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new WorkoutNotFoundException(id));
         workout.update(request.type(), request.durationMinutes(), request.memo(), request.workoutDateTime());
         return WorkoutResponse.from(workout);
     }
@@ -43,7 +43,7 @@ public class WorkoutService {
     @Transactional
     public void deleteWorkout(Long id) {
         Workout workout = workoutRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("운동 기록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new WorkoutNotFoundException(id));
         workoutRepository.delete(workout);
     }
 
@@ -56,6 +56,6 @@ public class WorkoutService {
     public WorkoutResponse getWorkout(Long id) {
         return workoutRepository.findById(id)
                 .map(WorkoutResponse::from)
-                .orElseThrow(() -> new NoSuchElementException("운동 기록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new WorkoutNotFoundException(id));
     }
 }

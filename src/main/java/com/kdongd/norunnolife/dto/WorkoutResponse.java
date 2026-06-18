@@ -7,11 +7,10 @@ import java.time.LocalDateTime;
 public record WorkoutResponse(
         Long id,
         WorkoutType type,
-        int durationMinutes,
+        Integer durationMinutes,
         String memo,
         LocalDateTime workoutDateTime
-)
-{
+) {
     public static WorkoutResponse from(Workout workout) {
         return new WorkoutResponse(
                 workout.getId(),
