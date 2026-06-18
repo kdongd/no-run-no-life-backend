@@ -4,7 +4,7 @@ import com.kdongd.norunnolife.domain.Workout;
 import com.kdongd.norunnolife.dto.WorkoutRequest;
 import com.kdongd.norunnolife.dto.WorkoutResponse;
 import com.kdongd.norunnolife.repository.WorkoutRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +12,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class WorkoutService {
 
     private final WorkoutRepository workoutRepository;
+
+    public WorkoutService(@Qualifier("jpaWorkoutRepository") WorkoutRepository workoutRepository) {
+        this.workoutRepository = workoutRepository;
+    }
 
     @Transactional
     public WorkoutResponse createWorkout(WorkoutRequest request) {

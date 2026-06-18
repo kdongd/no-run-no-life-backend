@@ -31,6 +31,16 @@ public class Workout {
         return workout;
     }
 
+    public static Workout withId(Long id, WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+        Workout workout = new Workout();
+        workout.id = id;
+        workout.type = type;
+        workout.durationMinutes = durationMinutes;
+        workout.memo = memo;
+        workout.workoutDateTime = workoutDateTime;
+        return workout;
+    }
+
     public void update(WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
         this.type = type;
         this.durationMinutes = durationMinutes;
