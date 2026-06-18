@@ -33,4 +33,15 @@ public class WorkoutController {
     public ResponseEntity<WorkoutResponse> getWorkout(@PathVariable Long id) {
         return ResponseEntity.ok(workoutService.getWorkout(id));
     }
+
+    @PutMapping("/workouts/{id}")
+    public ResponseEntity<WorkoutResponse> updateWorkout(@PathVariable Long id, @Valid @RequestBody WorkoutRequest request) {
+        return ResponseEntity.ok(workoutService.updateWorkout(id, request));
+    }
+
+    @DeleteMapping("/workouts/{id}")
+    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
+        workoutService.deleteWorkout(id);
+        return ResponseEntity.noContent().build();
+    }
 }
