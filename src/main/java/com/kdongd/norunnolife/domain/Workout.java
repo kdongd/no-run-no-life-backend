@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -21,6 +24,9 @@ public class Workout {
     private Integer durationMinutes;
     private String memo;
     private LocalDateTime workoutDateTime;
+
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkoutDetail> details = new ArrayList<>();
 
     public static Workout create(WorkoutType type, Integer durationMinutes, String memo, LocalDateTime workoutDateTime) {
         Workout workout = new Workout();
@@ -46,5 +52,9 @@ public class Workout {
         this.durationMinutes = durationMinutes;
         this.memo = memo;
         this.workoutDateTime = workoutDateTime;
+    }
+
+    public void addDetail(WorkoutDetail detail) {
+        details.add(detail);
     }
 }

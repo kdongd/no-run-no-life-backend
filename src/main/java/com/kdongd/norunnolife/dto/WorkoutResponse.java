@@ -2,14 +2,17 @@ package com.kdongd.norunnolife.dto;
 
 import com.kdongd.norunnolife.domain.Workout;
 import com.kdongd.norunnolife.domain.WorkoutType;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record WorkoutResponse(
         Long id,
         WorkoutType type,
         Integer durationMinutes,
         String memo,
-        LocalDateTime workoutDateTime
+        LocalDateTime workoutDateTime,
+        List<WorkoutDetailResponse> details
 ) {
     public static WorkoutResponse from(Workout workout) {
         return new WorkoutResponse(
@@ -17,7 +20,10 @@ public record WorkoutResponse(
                 workout.getType(),
                 workout.getDurationMinutes(),
                 workout.getMemo(),
-                workout.getWorkoutDateTime()
+                workout.getWorkoutDateTime(),
+                workout.getDetails().stream()
+                        .map(WorkoutDetailResponse::from)
+                        .toList()
         );
     }
 }

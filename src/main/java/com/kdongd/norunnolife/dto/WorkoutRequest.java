@@ -4,6 +4,7 @@ import com.kdongd.norunnolife.domain.WorkoutType;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record WorkoutRequest(
 
@@ -20,6 +21,8 @@ public record WorkoutRequest(
 
         @NotNull(message = "운동 날짜/시간은 필수입니다.")
         @PastOrPresent(message = "미래 날짜는 등록할 수 없습니다.")
-        LocalDateTime workoutDateTime
+        LocalDateTime workoutDateTime,
+
+        List<WorkoutDetailRequest> details
 
 ) {}

@@ -1,6 +1,8 @@
 package com.kdongd.norunnolife.service;
 
 import com.kdongd.norunnolife.domain.Workout;
+import com.kdongd.norunnolife.domain.WorkoutDetail;
+import com.kdongd.norunnolife.dto.WorkoutDetailRequest;
 import com.kdongd.norunnolife.dto.WorkoutRequest;
 import com.kdongd.norunnolife.dto.WorkoutResponse;
 import com.kdongd.norunnolife.exception.WorkoutNotFoundException;
@@ -29,6 +31,20 @@ public class WorkoutService {
                 request.memo(),
                 request.workoutDateTime()
         );
+
+        if (request.details() != null) {
+            for (WorkoutDetailRequest detailRequest : request.details()) {
+                WorkoutDetail detail = WorkoutDetail.create(
+                        workout,
+                        detailRequest.sequence(),
+                        detailRequest.label(),
+                        detailRequest.durationSeconds(),
+                        detailRequest.note()
+                );
+                workout.addDetail(detail);
+            }
+        }
+
         return WorkoutResponse.from(workoutRepository.save(workout));
     }
 
