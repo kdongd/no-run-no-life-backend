@@ -1,6 +1,7 @@
 package com.kdongd.norunnolife.repository;
 
 import com.kdongd.norunnolife.domain.Workout;
+import com.kdongd.norunnolife.domain.WorkoutDetail;
 import com.kdongd.norunnolife.domain.WorkoutType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Import;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -84,5 +84,35 @@ class JpaWorkoutRepositoryTest {
         workoutRepository.delete(saved);
 
         assertThat(workoutRepository.findById(saved.getId())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("save - details 함께 저장 후 조회 확인")
+    void save_withDetails() {
+        Workout workout = Workout.create(WorkoutType.BOXING, 60, "메모", now);
+        WorkoutDetail detail = WorkoutDetail.create(workout, 1, "1라운드", 180, "새도우");
+        workout.addDetail(detail);
+
+        Workout saved = workoutRepository.save(workout);
+        Optional<Workout> result = workoutRepository.findById(saved.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getDetails()).hasSize(1);
+        assertThat(result.get().getDetails().get(0).getLabel()).isEqualTo("1라운드");
+    }
+
+    @Test
+    @DisplayName("details 제거 후 orphanRemoval로 DB에서 삭제 확인")
+    void removeDetail_orphanRemoval() {
+        Workout workout = Workout.create(WorkoutType.BOXING, 60, "메모", now);
+        WorkoutDetail detail = WorkoutDetail.create(workout, 1, "1라운드", 180, "새도우");
+        workout.addDetail(detail);
+        Workout saved = workoutRepository.save(workout);
+
+        saved.getDetails().clear();
+        workoutRepository.save(saved);
+
+        Optional<Workout> result = workoutRepository.findById(saved.getId());
+        assertThat(result.get().getDetails()).isEmpty();
     }
 }
