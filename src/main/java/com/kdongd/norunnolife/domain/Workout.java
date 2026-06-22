@@ -56,5 +56,6 @@ public class Workout {
 
     public void addDetail(WorkoutDetail detail) {
         details.add(detail);
+        detail.assignWorkout(this);
     }
 }
