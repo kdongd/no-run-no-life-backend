@@ -1,6 +1,7 @@
 package com.kdongd.norunnolife.dto;
 
 import com.kdongd.norunnolife.domain.WorkoutType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public record WorkoutRequest(
         @PastOrPresent(message = "미래 날짜는 등록할 수 없습니다.")
         LocalDateTime workoutDateTime,
 
+        @Valid
         List<WorkoutDetailRequest> details
 
 ) {}
