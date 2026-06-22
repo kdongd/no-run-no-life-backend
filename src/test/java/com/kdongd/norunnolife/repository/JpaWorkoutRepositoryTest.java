@@ -3,6 +3,7 @@ package com.kdongd.norunnolife.repository;
 import com.kdongd.norunnolife.domain.Workout;
 import com.kdongd.norunnolife.domain.WorkoutDetail;
 import com.kdongd.norunnolife.domain.WorkoutType;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ class JpaWorkoutRepositoryTest {
 
     @Autowired
     private JpaWorkoutRepository workoutRepository;
+
+    @Autowired
+    private EntityManager em;
 
     private final LocalDateTime now = LocalDateTime.now();
 
@@ -90,10 +94,13 @@ class JpaWorkoutRepositoryTest {
     @DisplayName("save - details 함께 저장 후 조회 확인")
     void save_withDetails() {
         Workout workout = Workout.create(WorkoutType.BOXING, 60, "메모", now);
-        WorkoutDetail detail = WorkoutDetail.create(workout, 1, "1라운드", 180, "새도우");
+        WorkoutDetail detail = WorkoutDetail.create(1, "1라운드", 180, "새도우");
         workout.addDetail(detail);
 
         Workout saved = workoutRepository.save(workout);
+        em.flush();
+        em.clear();
+
         Optional<Workout> result = workoutRepository.findById(saved.getId());
 
         assertThat(result).isPresent();
@@ -105,12 +112,17 @@ class JpaWorkoutRepositoryTest {
     @DisplayName("details 제거 후 orphanRemoval로 DB에서 삭제 확인")
     void removeDetail_orphanRemoval() {
         Workout workout = Workout.create(WorkoutType.BOXING, 60, "메모", now);
-        WorkoutDetail detail = WorkoutDetail.create(workout, 1, "1라운드", 180, "새도우");
+        WorkoutDetail detail = WorkoutDetail.create(1, "1라운드", 180, "새도우");
         workout.addDetail(detail);
         Workout saved = workoutRepository.save(workout);
+        em.flush();
+        em.clear();
 
-        saved.getDetails().clear();
-        workoutRepository.save(saved);
+        Workout found = workoutRepository.findById(saved.getId()).get();
+        found.getDetails().clear();
+        workoutRepository.save(found);
+        em.flush();
+        em.clear();
 
         Optional<Workout> result = workoutRepository.findById(saved.getId());
         assertThat(result.get().getDetails()).isEmpty();
