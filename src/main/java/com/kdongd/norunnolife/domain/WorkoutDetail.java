@@ -23,13 +23,16 @@ public class WorkoutDetail {
     private Integer durationSeconds;
     private String note;
 
-    public static WorkoutDetail create(Workout workout, Integer sequence, String label, Integer durationSeconds, String note) {
+    public static WorkoutDetail create(Integer sequence, String label, Integer durationSeconds, String note) {
         WorkoutDetail detail = new WorkoutDetail();
-        detail.workout = workout;
         detail.sequence = sequence;
         detail.label = label;
         detail.durationSeconds = durationSeconds;
         detail.note = note;
         return detail;
+    }
+
+    void assignWorkout(Workout workout) {
+        this.workout = workout;
     }
 }
