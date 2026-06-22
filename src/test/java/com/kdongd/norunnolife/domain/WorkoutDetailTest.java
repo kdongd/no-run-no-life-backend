@@ -15,7 +15,8 @@ class WorkoutDetailTest {
     @DisplayName("create - 모든 필드값 정상 세팅 확인")
     void create_fieldsMatch() {
         Workout workout = Workout.create(WorkoutType.RUNNING, 30, "메모", now);
-        WorkoutDetail detail = WorkoutDetail.create(workout, 1, "1km", 300, "페이스");
+        WorkoutDetail detail = WorkoutDetail.create(1, "1km", 300, "페이스");
+        workout.addDetail(detail);
 
         assertThat(detail.getWorkout()).isEqualTo(workout);
         assertThat(detail.getSequence()).isEqualTo(1);
