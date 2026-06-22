@@ -40,7 +40,7 @@ class WorkoutTest {
     @DisplayName("addDetail - details 리스트에 추가 확인")
     void addDetail_success() {
         Workout workout = Workout.create(WorkoutType.RUNNING, 30, "메모", now);
-        WorkoutDetail detail = WorkoutDetail.create(workout, 1, "1km", 300, "페이스");
+        WorkoutDetail detail = WorkoutDetail.create(1, "1km", 300, "페이스");
 
         workout.addDetail(detail);
 
