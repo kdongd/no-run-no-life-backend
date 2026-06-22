@@ -35,7 +35,6 @@ public class WorkoutService {
         if (request.details() != null) {
             for (WorkoutDetailRequest detailRequest : request.details()) {
                 WorkoutDetail detail = WorkoutDetail.create(
-                        workout,
                         detailRequest.sequence(),
                         detailRequest.label(),
                         detailRequest.durationSeconds(),
@@ -53,6 +52,20 @@ public class WorkoutService {
         Workout workout = workoutRepository.findById(id)
                 .orElseThrow(() -> new WorkoutNotFoundException(id));
         workout.update(request.type(), request.durationMinutes(), request.memo(), request.workoutDateTime());
+
+        workout.getDetails().clear();
+        if (request.details() != null) {
+            for (WorkoutDetailRequest detailRequest : request.details()) {
+                WorkoutDetail detail = WorkoutDetail.create(
+                        detailRequest.sequence(),
+                        detailRequest.label(),
+                        detailRequest.durationSeconds(),
+                        detailRequest.note()
+                );
+                workout.addDetail(detail);
+            }
+        }
+
         return WorkoutResponse.from(workout);
     }
 
