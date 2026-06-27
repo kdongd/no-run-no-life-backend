@@ -120,7 +120,6 @@ class JpaWorkoutRepositoryTest {
 
         Workout found = workoutRepository.findById(saved.getId()).get();
         found.getDetails().clear();
-        workoutRepository.save(found);
         em.flush();
         em.clear();
 

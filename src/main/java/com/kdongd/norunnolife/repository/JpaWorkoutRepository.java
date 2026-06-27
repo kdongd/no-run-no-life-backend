@@ -18,11 +18,8 @@ public class JpaWorkoutRepository implements WorkoutRepository {
 
     @Override
     public Workout save(Workout workout) {
-        if (workout.getId() == null) {
-            em.persist(workout);
-            return workout;
-        }
-        return em.merge(workout);
+        em.persist(workout);
+        return workout;
     }
 
     @Override
@@ -43,6 +40,6 @@ public class JpaWorkoutRepository implements WorkoutRepository {
 
     @Override
     public void delete(Workout workout) {
-        em.remove(em.contains(workout) ? workout : em.merge(workout));
+        em.remove(workout);
     }
 }
