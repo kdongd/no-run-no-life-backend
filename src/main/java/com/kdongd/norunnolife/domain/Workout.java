@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -18,11 +21,14 @@ public class Workout {
     @Enumerated(EnumType.STRING)
     private WorkoutType type;
 
-    private int durationMinutes;
+    private Integer durationMinutes;
     private String memo;
     private LocalDateTime workoutDateTime;
 
-    public static Workout create(WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkoutDetail> details = new ArrayList<>();
+
+    public static Workout create(WorkoutType type, Integer durationMinutes, String memo, LocalDateTime workoutDateTime) {
         Workout workout = new Workout();
         workout.type = type;
         workout.durationMinutes = durationMinutes;
@@ -31,7 +37,7 @@ public class Workout {
         return workout;
     }
 
-    public static Workout withId(Long id, WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+    public static Workout withId(Long id, WorkoutType type, Integer durationMinutes, String memo, LocalDateTime workoutDateTime) {
         Workout workout = new Workout();
         workout.id = id;
         workout.type = type;
@@ -41,10 +47,15 @@ public class Workout {
         return workout;
     }
 
-    public void update(WorkoutType type, int durationMinutes, String memo, LocalDateTime workoutDateTime) {
+    public void update(WorkoutType type, Integer durationMinutes, String memo, LocalDateTime workoutDateTime) {
         this.type = type;
         this.durationMinutes = durationMinutes;
         this.memo = memo;
         this.workoutDateTime = workoutDateTime;
+    }
+
+    public void addDetail(WorkoutDetail detail) {
+        details.add(detail);
+        detail.assignWorkout(this);
     }
 }

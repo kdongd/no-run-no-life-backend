@@ -18,25 +18,28 @@ public class JpaWorkoutRepository implements WorkoutRepository {
 
     @Override
     public Workout save(Workout workout) {
-        if (workout.getId() == null) {
-            em.persist(workout);
-            return workout;
-        }
-        return em.merge(workout);
+        em.persist(workout);
+        return workout;
     }
 
     @Override
     public Optional<Workout> findById(Long id) {
-        return Optional.ofNullable(em.find(Workout.class, id));
+        List<Workout> result = em.createQuery(
+                        "select w from Workout w left join fetch w.details where w.id = :id", Workout.class)
+                .setParameter("id", id)
+                .getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override
     public List<Workout> findAll() {
-        return em.createQuery("select w from Workout w", Workout.class).getResultList();
+        return em.createQuery(
+                        "select distinct w from Workout w left join fetch w.details", Workout.class)
+                .getResultList();
     }
 
     @Override
     public void delete(Workout workout) {
-        em.remove(em.contains(workout) ? workout : em.merge(workout));
+        em.remove(workout);
     }
 }
